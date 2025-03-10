@@ -1,4 +1,3 @@
-// src/store/atoms.js에 favoritesState를 추가했는지 확인해볼게요:
 import { atom } from 'recoil'
 
 // 사용자 상태를 관리하는 atom
@@ -6,7 +5,10 @@ export const userState = atom({
  key: 'userState',
  default: {
    isLoggedIn: false,
+   id: null,
    name: '',
+   email: '',
+   profileImage: null, // 프로필 이미지 필드 추가
    preferences: {
      spicyLevel: '보통',
      cookingTime: 30,
@@ -33,8 +35,20 @@ export const currentRecipeState = atom({
  }
 })
 
-// 즐겨찾기 상태 추가
+// 즐겨찾기 상태
 export const favoritesState = atom({
  key: 'favoritesState',
  default: []
+})
+
+// 공유 리뷰 상태
+export const reviewsState = atom({
+  key: 'reviewsState',
+  default: []
+})
+
+// 다크모드 상태
+export const darkModeState = atom({
+  key: 'darkModeState',
+  default: false
 })

@@ -1,4 +1,4 @@
-// src/utils/api.ts
+// src/utils/api.js
 import axios from 'axios'
 
 // 1. axios 인스턴스 생성
@@ -51,20 +51,20 @@ api.interceptors.response.use(
 export const apiService = {
   recipes: {
     getAll: () => api.get('/recipes'),
-    getById: (id: string) => api.get(`/recipes/${id}`),
-    getRecommendation: (preferences: any) => 
+    getById: (id) => api.get(`/recipes/${id}`),
+    getRecommendation: (preferences) => 
       api.post('/recipes/recommend', preferences)
   },
 
   user: {
     getProfile: () => api.get('/user/profile'),
-    updateProfile: (data: any) => api.put('/user/profile', data),
-    savePreferences: (preferences: any) => 
+    updateProfile: (data) => api.put('/user/profile', data),
+    savePreferences: (preferences) => 
       api.post('/user/preferences', preferences)
   },
 
   chat: {
-    sendMessage: (message: string) => 
+    sendMessage: (message) => 
       api.post('/chat/message', { message }),
     getHistory: () => api.get('/chat/history')
   }
