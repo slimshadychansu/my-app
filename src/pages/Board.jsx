@@ -11,7 +11,7 @@ import BoardHeader from '../features/board/components/BoardHeader';
 import CategoryFilter from '../features/board/components/CategoryFilter';
 import TagFilter from '../features/board/components/TagFilter';
 import SearchBar from '../features/board/components/SearchBar';
-import BoardList from '../features/board/components/BoarList'
+import BoardList from '../features/board/components/BoardList'
 import Pagination from '../features/board/components/Pagination';
 
 // 보드 데이터 훅
