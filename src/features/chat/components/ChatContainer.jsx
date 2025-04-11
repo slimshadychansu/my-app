@@ -28,7 +28,8 @@ function ChatContainer({
   showCookingGuide = false, 
   currentRecipe = null, 
   onStartCooking = () => {}, 
-  user = null 
+  user = null,
+  className = "" 
 }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -41,6 +42,18 @@ function ChatContainer({
 
   // 초기 메시지 설정 (마운트 시)
   useEffect(() => {
+    // 요리 가이드 모드일 때는 요리 관련 초기 메시지
+    if (showCookingGuide && currentRecipe) {
+      const initialMessage = {
+        type: 'ai',
+        content: `${currentRecipe.title} 요리를 시작하셨네요! 요리하는 동안 궁금한 점이 있으면 언제든지 물어보세요.`,
+        suggestion: '예시: "이 재료 대체할 수 있을까?", "소금은 얼마나 넣어야 해?", "보관 방법은?"'
+      };
+      setMessages([initialMessage]);
+      return;
+    }
+
+    // 일반 모드에서는 환영 메시지
     const initialMessage = {
       type: 'ai',
       content: currentUser.name 
@@ -50,7 +63,7 @@ function ChatContainer({
     };
 
     setMessages([initialMessage]);
-  }, [currentUser.name]);
+  }, [currentUser.name, showCookingGuide, currentRecipe]);
 
   // 채팅 스크롤 자동화
   useEffect(() => {
@@ -94,7 +107,7 @@ function ChatContainer({
         }]);
       } else {
         // API 호출
-        const response = await apiService.chat.sendMessage(submitInput);
+        const response = await apiService.chat.askAI(submitInput);
         
         // 레시피 추천 응답인 경우 처리
         if (response.data.recipes && response.data.recipes.length > 0) {
@@ -151,9 +164,12 @@ function ChatContainer({
   
   // 현재 상태에 맞는 제안 선택
   const suggestions = showCookingGuide ? COOKING_SUGGESTIONS : QUICK_SUGGESTIONS;
+
+  // 요리 가이드 모드일 때는 조금 더 작은 UI로 표시
+  const containerClasses = `${className} ${showCookingGuide ? "h-full" : ""}`;
   
   return (
-    <div className={showCookingGuide ? "lg:col-span-2" : ""}>
+    <div className={containerClasses}>
       <ChatInterface 
         messages={messages}
         input={input}
@@ -177,7 +193,8 @@ ChatContainer.propTypes = {
   showCookingGuide: PropTypes.bool,
   currentRecipe: PropTypes.object,
   onStartCooking: PropTypes.func,
-  user: PropTypes.object
+  user: PropTypes.object,
+  className: PropTypes.string
 };
 
 export default React.memo(ChatContainer);

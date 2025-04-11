@@ -33,6 +33,7 @@ function Home() {
   // 요리 가이드 종료 핸들러
   const handleCloseCookingGuide = () => {
     setShowCookingGuide(false);
+    setCurrentRecipe(null);
   };
   
   // 요리 완료 핸들러
@@ -55,36 +56,50 @@ function Home() {
     });
   };
 
-  // 현재 모드에 따라 다른 컴포넌트 렌더링
+  // 현재 모드에 따라 다른 레이아웃 렌더링
   const renderMainContent = () => {
     if (showCookingGuide && currentRecipe) {
       return (
-        <CookingGuideContainer
-          recipe={currentRecipe}
-          onComplete={handleCompleteRecipe}
-          onClose={handleCloseCookingGuide}
-        />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* 채팅 컴포넌트 - 큰 화면에서 1/3 차지 */}
+          <div className="lg:col-span-1">
+            <ChatContainer 
+              showCookingGuide={true}
+              currentRecipe={currentRecipe}
+              user={user}
+            />
+          </div>
+          
+          {/* 요리 가이드 컴포넌트 - 큰 화면에서 2/3 차지 */}
+          <div className="lg:col-span-2">
+            <CookingGuideContainer
+              recipe={currentRecipe}
+              onComplete={handleCompleteRecipe}
+              onClose={handleCloseCookingGuide}
+            />
+          </div>
+        </div>
       );
     }
     
     return (
       <>
         <ChatContainer 
-          showCookingGuide={showCookingGuide}
-          currentRecipe={currentRecipe}
+          showCookingGuide={false}
+          currentRecipe={null}
           user={user}
         />
         
         <RecipeListContainer 
           onStartCooking={handleStartCookingGuide}
-          showCookingGuide={showCookingGuide}
+          showCookingGuide={false}
         />
       </>
     );
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 pb-10">
+    <div className="max-w-6xl mx-auto px-4 pb-10">
       <WelcomeHeader user={user} />
       
       {user.name && !showCookingGuide && (
