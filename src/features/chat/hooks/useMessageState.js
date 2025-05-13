@@ -1,7 +1,7 @@
-// src/features/chat/hooks/useChatMessages.js
-import { useState, useEffect, useRef } from 'react';
+// src/features/chat/hooks/useMessageState.js
+import { useState, useEffect, useCallback, useRef } from 'react';
 
-export function useChatMessages(currentUser, showCookingGuide, currentRecipe) {
+export function useMessageState(currentUser, showCookingGuide, currentRecipe) {
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
 
@@ -19,14 +19,14 @@ export function useChatMessages(currentUser, showCookingGuide, currentRecipe) {
 
     const initialMessage = {
       type: 'ai',
-      content: currentUser.name 
+      content: currentUser?.name 
         ? `안녕하세요, ${currentUser.name}님! 오늘은 어떤 요리를 도와드릴까요?`
         : '안녕하세요! 오늘은 어떤 요리를 도와드릴까요?',
       suggestion: '예시: "간단한 저녁 메뉴 추천해줘" 또는 "남은 재료로 만들 수 있는 요리 알려줘"'
     };
 
     setMessages([initialMessage]);
-  }, [currentUser.name, showCookingGuide, currentRecipe]);
+  }, [currentUser, showCookingGuide, currentRecipe]);
 
   // 채팅 자동 스크롤
   useEffect(() => {
@@ -34,32 +34,31 @@ export function useChatMessages(currentUser, showCookingGuide, currentRecipe) {
   }, [messages]);
 
   // 사용자 메시지 추가
-  const addUserMessage = (content) => {
+  const addUserMessage = useCallback((content) => {
     setMessages(prev => [...prev, { type: 'user', content }]);
-  };
+  }, []);
 
   // AI 메시지 추가
-  const addAIMessage = (content, suggestion = null) => {
+  const addAIMessage = useCallback((content, suggestion = null) => {
     setMessages(prev => [...prev, { type: 'ai', content, suggestion }]);
-  };
+  }, []);
 
   // 레시피가 포함된 AI 메시지 추가
-  const addAIMessageWithRecipe = (content, recipe, suggestion = null) => {
+  const addAIMessageWithRecipe = useCallback((content, recipe, suggestion = null) => {
     setMessages(prev => [...prev, { type: 'ai', content, recipe, suggestion }]);
-  };
+  }, []);
 
   // 오류 메시지 추가
-  const addAIErrorMessage = (errorMessage) => {
+  const addAIErrorMessage = useCallback((errorMessage) => {
     setMessages(prev => [...prev, { 
       type: 'ai', 
       content: errorMessage,
       isError: true
     }]);
-  };
+  }, []);
 
   return {
     messages,
-    setMessages,
     messagesEndRef,
     addUserMessage,
     addAIMessage,
@@ -67,3 +66,5 @@ export function useChatMessages(currentUser, showCookingGuide, currentRecipe) {
     addAIErrorMessage
   };
 }
+
+export default useMessageState;

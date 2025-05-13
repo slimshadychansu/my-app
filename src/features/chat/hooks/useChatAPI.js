@@ -69,3 +69,5 @@ export function useChatAPI() {
     getCookingFallbackResponse
   };
 }
+
+export default useChatAPI;

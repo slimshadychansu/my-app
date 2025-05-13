@@ -169,3 +169,5 @@ export function useRecipeParsing() {
     isRecipeResponse 
   };
 }
+
+export default useRecipeParsing;
